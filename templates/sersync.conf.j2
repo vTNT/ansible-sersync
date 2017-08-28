@@ -1,0 +1,7 @@
+[program:sersync]
+command={{ sersync_path }}/sersync2 -r -o {{ sersync_path }}/confxml.xml
+stdout_events_enabled=true
+stderr_events_enabled=true
+numprocs=1
+autostart=true
+autorestart=true

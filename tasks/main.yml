@@ -1,0 +1,35 @@
+---
+
+- name: Install Debian OS packages
+  apt: pkg={{ item }} state=present update_cache=yes cache_valid_time=3600
+  with_items:
+    - supervisor
+    - rsync
+
+- name: mkdir sersync directory
+  file: path={{ sersync_path }} mode=0644 state=directory
+
+- name: Check if sersync directory exists
+  stat: path={{ sersync_path }}
+  register: systemd_check
+
+- name: Check if supervisor directory exists
+  stat: path=/etc/supervisor/conf.d
+  register: supervisor_check
+
+- name: copy sersync_superviosr_file to host
+  template: src=sersync.conf.j2 dest=/etc/supervisor/conf.d/sersync.conf
+  when: supervisor_check.stat.exists == true
+
+- name: configure | Set rsync password file.
+  lineinfile: dest={{ sersync_rsync_passwordfile }} line={{ sersync_rsync.pass }} create=yes mode=600
+  when: sersync_rsync.user is defined and sersync_rsync.pass is defined
+
+- name: sersync config file
+  template: src=confxml.xml.j2 dest="{{ sersync_path }}/confxml.xml"
+  when: systemd_check.stat.exists == true
+  notify:
+    - restart supervisor
+
+- name: Enable/Disable supervisor service
+  service: name=supervisor enabled="yes"
