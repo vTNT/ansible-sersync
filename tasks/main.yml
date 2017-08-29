@@ -28,8 +28,7 @@
 - name: sersync config file
   template: src=confxml.xml.j2 dest="{{ sersync_path }}/confxml.xml"
   when: systemd_check.stat.exists == true
-  notify:
-    - restart supervisor
+  notify: restart supervisor
 
 - name: Enable/Disable supervisor service
-  service: name=supervisor enabled="yes"
+  service: name=supervisor state=started enabled=yes
