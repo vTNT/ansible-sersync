@@ -50,17 +50,17 @@ rsync
 
 ## Example Playbook
 
-	install sersync：
     ---
     - name: Test the plabybook API.
-    hosts: all
-    remote_user: root
-    gather_facts: no
-    roles:
-      - role: ansible-sersync
-        sersync_inotify_createFolder: false
-        sersync_watch: "/data/LOneClient/data"
-        sersync_host_list: ["172.17.0.3", "172.17.0.5"]
-        sersync_rsync: {"name":stock, "user":nobody, "pass":123456789}
-        sersync_rsync_passwordfile: "/etc/password.rsync"
+      hosts: all
+      remote_user: root
+      gather_facts: no
+      roles:
+        - role: ansible-sersync
+          sersync_inotify_createFolder: false
+          sersync_inotify_modify: true
+          sersync_watch: "/data/LOneClient/data"
+          sersync_host_list: ["172.17.0.3", "172.17.0.5"]
+          sersync_rsync: {"name":stock, "user":nobody, "pass":123456789}
+          sersync_rsync_passwordfile: "/etc/password.rsync"
 
