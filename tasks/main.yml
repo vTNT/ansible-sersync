@@ -13,6 +13,10 @@
   stat: path={{ sersync_path }}
   register: systemd_check
 
+- name: copy code to host
+  copy: src=GNU-Linux-x86/ dest={{ sersync_path }} mode=755
+  when: systemd_check.stat.exists == true
+
 - name: Check if supervisor directory exists
   stat: path=/etc/supervisor/conf.d
   register: supervisor_check
@@ -28,7 +32,7 @@
 - name: sersync config file
   template: src=confxml.xml.j2 dest="{{ sersync_path }}/confxml.xml"
   when: systemd_check.stat.exists == true
-  notify: restart supervisor
+  #notify: restart supervisor
 
 - name: Enable/Disable supervisor service
   service: name=supervisor state=started enabled=yes
